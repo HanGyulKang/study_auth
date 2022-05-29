@@ -1,7 +1,7 @@
 package com.study.auth.setEnum;
 
 public enum UserRole {
-    USER("USER"), ADMIN("ADMIN"), MANAGER("MANAGER");
+    ROLE_USER("ROLE_USER"), ROLE_ADMIN("ROLE_ADMIN"), ROLE_MANAGER("ROLE_MANAGER");
 
     private final String role;
 

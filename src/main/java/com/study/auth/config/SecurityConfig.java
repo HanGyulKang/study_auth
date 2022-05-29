@@ -1,6 +1,5 @@
 package com.study.auth.config;
 
-import com.study.auth.setEnum.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -31,9 +30,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()
                 .and()
-                .formLogin()
-                .loginPage("/loginForm")
-                .loginProcessingUrl("/login") // login 주소가 호출되면 시큐리티가 낚아채서 대신 로그인을 해줌(login용도의 controller method를 만들 필요가 없음)
-                .defaultSuccessUrl("/user");
+                    .formLogin()
+                    .loginPage("/loginForm")
+                    .loginProcessingUrl("/login") // login 주소가 호출되면 시큐리티가 낚아채서 대신 로그인을 해줌(login용도의 controller method를 만들 필요가 없음)
+                    .defaultSuccessUrl("/")
+                .and()
+                    .oauth2Login()
+                    .loginPage("/loginForm") // 구글 로그인이 완료된 뒤의 후처리 필요
+                ;
     }
 }

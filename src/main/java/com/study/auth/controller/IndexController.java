@@ -3,6 +3,7 @@ package com.study.auth.controller;
 import com.study.auth.dto.UserDto;
 import com.study.auth.entity.User;
 import com.study.auth.repository.UserRepository;
+import com.study.auth.setEnum.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class IndexController {
     /** =====================================================
      * [TEST]
      ===================================================== */
-    @GetMapping("/index")
+    @GetMapping({"","/index"})
     public String index() {
         return "index";
     }
@@ -88,11 +89,11 @@ public class IndexController {
 //            user.setRole(USER);
 //        }
         if("manager".equals(userDto.getUsername())) {
-            user.setRole("ROLE_MANAGER");
+            user.setRole(ROLE_MANAGER.getRole());
         } else if("admin".equals(userDto.getUsername())) {
-            user.setRole("ROLE_ADMIN");
+            user.setRole(ROLE_ADMIN.getRole());
         } else {
-            user.setRole("ROLE_USER");
+            user.setRole(ROLE_USER.getRole());
         }
 
         user.setSocialType(KAKAO);
