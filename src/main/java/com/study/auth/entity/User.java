@@ -20,6 +20,7 @@ public class User {
     private String password;
     private String phoneNumber;
     private String email;
+    private Boolean deleted;
     @Enumerated(EnumType.STRING)
     private UserRole role;
     @Enumerated(EnumType.STRING)
