@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static com.study.auth.setEnum.UserRole.*;
+import static com.study.auth.setEnum.UserSocialType.GOOGLE;
 import static com.study.auth.setEnum.UserSocialType.KAKAO;
 
 @Controller
@@ -33,6 +34,14 @@ public class IndexController {
 
     /** =====================================================
      * [세션 정보 확인 TEST]
+     * 1. 일반 세션 안에 spring security만이 사용하는 session이 들어있다.
+     * 2. 시큐리티 세션에는 Authentication 타입의 데이터만 들어간다.
+     * 3. Authentication 타입 안에는 UserDetails와 OAuth2User 객체만 넣을 수 있다.
+     *
+     * [결론]
+     * 시큐리티 세션 <= Authentication 객체 <= UserDetails 또는 OAuth2User 객체
+     *      - UserDetails 객체 : 일반 유저 로그인 시 생성
+     *      - OAuth2User 객체 : 소셜 로그인 시 생성
      ===================================================== */
     @GetMapping("/test/login")
     public @ResponseBody String testLogin(Authentication authentication,
@@ -77,7 +86,9 @@ public class IndexController {
      * [ROLE URL]
      ===================================================== */
     @GetMapping("/user")
-    public @ResponseBody String user() {
+    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        // 일반 유저 로그인, 소셜 로그인 동시에 PrincipalDetails로 받을 수 있음
+        System.out.println("principalDetails : " + principalDetails);
         return "user";
     }
 
@@ -135,7 +146,7 @@ public class IndexController {
             user.setRole(ROLE_USER.getRole());
         }
 
-        user.setSocialType(KAKAO);
+        user.setSocialType(GOOGLE.getSocialType());
         user.setDeleted(false);
 
         userRepository.save(user);

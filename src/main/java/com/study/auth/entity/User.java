@@ -12,21 +12,31 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
+    private String name;
     private String phoneNumber;
     private String email;
     private Boolean deleted;
-//    @Enumerated(EnumType.STRING)
-//    private UserRole role;
     private String role;
     @CreationTimestamp
     private Timestamp createDate;
-    @Enumerated(EnumType.STRING)
-    private UserSocialType socialType;
-    private String UserSocialId;
+    private String socialType;
+    private String socialId;
+
+    @Builder
+    public User(String username, String password, String email, String role, String socialType, String socialId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.deleted = false;
+        this.socialType = socialType;
+        this.socialId = socialId;
+    }
 }

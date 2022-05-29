@@ -49,7 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                      * 4-2. 정보가 조금 부족하면 회원가입 수동 진행
                      */
                     .userInfoEndpoint()
-                    .userService(principalOauth2UserService)
-        ;
+                    .userService(principalOauth2UserService);
     }
 }
