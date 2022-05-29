@@ -2,6 +2,9 @@ package com.study.auth.config.oauth;
 
 
 import com.study.auth.config.auth.PrincipalDetails;
+import com.study.auth.config.oauth.provider.OAuth2UserInfo;
+import com.study.auth.config.oauth.provider.impl.FacebookUserInfoImpl;
+import com.study.auth.config.oauth.provider.impl.GoogleUserInfoImpl;
 import com.study.auth.entity.User;
 import com.study.auth.repository.UserRepository;
 import com.study.auth.setEnum.UserRole;
@@ -50,13 +53,28 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         /**
          * 강제 회원 가입
          */
-        String socialType = userRequest.getClientRegistration().getRegistrationId(); // 소셜 종류(google, kakao ...)
-        String socialId = oAuth2User.getAttribute("sub");
+        // 소셜 분기
+        OAuth2UserInfo oAuth2UserInfo = null;
+        if(userRequest.getClientRegistration().getRegistrationId().equals("google")) {
+            System.out.println("구글 로그인 요청");
+            oAuth2UserInfo = new GoogleUserInfoImpl(oAuth2User.getAttributes());
+        } else if(userRequest.getClientRegistration().getRegistrationId().equals("google")) {
+            System.out.println("페이스북 로그인 요청");
+            oAuth2UserInfo = new FacebookUserInfoImpl(oAuth2User.getAttributes());
+        } else {
+            System.out.println("구글 또는 페이스북 로그인만 가능");
+        }
+
+        // 분기해서 가져온 값 셋팅
+        String socialType = oAuth2UserInfo.getSocialType(); // 소셜 종류(google, kakao ...)
+        String socialId = oAuth2UserInfo.getSocialId();
+        String email = oAuth2UserInfo.getEmail();
+
         String username = socialType + "_" + socialId; // 예 : google_123450192495810190293
         String password = bCryptPasswordEncoder.encode(socialType); // 어차피 필요 없음
-        String email = oAuth2User.getAttribute("email");
         String role = UserRole.ROLE_USER.getRole();
 
+        // 이미 가입한 회원인지 검증
         User userEntity = userRepository.findByUsername(username);
         if(userEntity == null) {
             System.out.println("최초 구글 로그인");

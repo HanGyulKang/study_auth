@@ -1,7 +1,7 @@
 package com.study.auth.setEnum;
 
 public enum UserSocialType {
-    KAKAO("KAKAO"), APPLE("APPLE"), GOOGLE("GOOGLE");
+    KAKAO("KAKAO"), APPLE("APPLE"), GOOGLE("GOOGLE"), NONE("NONE");
 
     private final String socialType;
 

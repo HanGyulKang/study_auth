@@ -18,8 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static com.study.auth.setEnum.UserRole.*;
-import static com.study.auth.setEnum.UserSocialType.GOOGLE;
-import static com.study.auth.setEnum.UserSocialType.KAKAO;
+import static com.study.auth.setEnum.UserSocialType.*;
 
 @Controller
 public class IndexController {
@@ -146,7 +145,7 @@ public class IndexController {
             user.setRole(ROLE_USER.getRole());
         }
 
-        user.setSocialType(GOOGLE.getSocialType());
+        user.setSocialType(NONE.getSocialType());
         user.setDeleted(false);
 
         userRepository.save(user);
