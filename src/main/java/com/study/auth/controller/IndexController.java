@@ -6,12 +6,13 @@ import com.study.auth.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
-import static com.study.auth.setEnum.UserRole.ROLE_USER;
+import static com.study.auth.setEnum.UserRole.*;
 import static com.study.auth.setEnum.UserSocialType.KAKAO;
 
 @Controller
@@ -36,17 +37,17 @@ public class IndexController {
      * [ROLE URL]
      ===================================================== */
     @GetMapping("/user")
-    public String user() {
+    public @ResponseBody String user() {
         return "user";
     }
 
     @GetMapping("/admin")
-    public String admin() {
+    public @ResponseBody String admin() {
         return "admin";
     }
 
     @GetMapping("/manager")
-    public String manager() {
+    public @ResponseBody String manager() {
         return "manager";
     }
 
@@ -78,13 +79,41 @@ public class IndexController {
         user.setUsername(userDto.getUsername());
         user.setPassword(encPassword);
         user.setEmail(userDto.getEmail());
-        user.setRole(ROLE_USER);
+
+//        if("manager".equals(userDto.getUsername())) {
+//            user.setRole(MANAGER);
+//        } else if("admin".equals(userDto.getUsername())) {
+//            user.setRole(ADMIN);
+//        } else {
+//            user.setRole(USER);
+//        }
+        if("manager".equals(userDto.getUsername())) {
+            user.setRole("ROLE_MANAGER");
+        } else if("admin".equals(userDto.getUsername())) {
+            user.setRole("ROLE_ADMIN");
+        } else {
+            user.setRole("ROLE_USER");
+        }
+
         user.setSocialType(KAKAO);
         user.setDeleted(false);
 
         userRepository.save(user);
 
         return "redirect:/loginForm";
+    }
+
+    @Secured("ROLE_ADMIN") // 특정 하나의 권한만 접근 가능
+    @GetMapping("/info")
+    public @ResponseBody String info() {
+        return "개인정보";
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')") // 여러 권한 접근 가능
+    @GetMapping("/data")
+    public @ResponseBody String data() {
+        return "데이터 정보";
     }
 
 }

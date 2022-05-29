@@ -21,8 +21,9 @@ public class User {
     private String phoneNumber;
     private String email;
     private Boolean deleted;
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+//    @Enumerated(EnumType.STRING)
+//    private UserRole role;
+    private String role;
     @Enumerated(EnumType.STRING)
     private UserSocialType socialType;
     @CreationTimestamp
