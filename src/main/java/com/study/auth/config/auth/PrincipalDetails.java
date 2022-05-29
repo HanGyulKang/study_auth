@@ -2,6 +2,7 @@ package com.study.auth.config.auth;
 
 
 import com.study.auth.entity.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,6 +19,7 @@ import java.util.Collection;
 
 // 시큐리티 세션 영역(Security Session) => Authentication 객체만 들어 감
 // => Authentication 객체 안의 UserDetails 타입 객체에 User 정보가 있음
+@Data
 public class PrincipalDetails implements UserDetails {
     private User user; // 콤포지션
 

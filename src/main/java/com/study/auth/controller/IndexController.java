@@ -1,15 +1,19 @@
 package com.study.auth.controller;
 
+import com.study.auth.config.auth.PrincipalDetails;
 import com.study.auth.dto.UserDto;
 import com.study.auth.entity.User;
 import com.study.auth.repository.UserRepository;
-import com.study.auth.setEnum.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +28,41 @@ public class IndexController {
     private UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+
+    /** =====================================================
+     * [세션 정보 확인 TEST]
+     ===================================================== */
+    @GetMapping("/test/login")
+    public @ResponseBody String testLogin(Authentication authentication,
+                            // 세션 정보에 접근 가능
+                            @AuthenticationPrincipal UserDetails userDtails) { // DI(의존성주입)
+
+        System.out.println("[ 1 - 세션 정보 접근 ] =============== authentication.getPrincipal() ================");
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        System.out.println("authentication : " + principalDetails.toString());
+
+        System.out.println("[ 2 - 세션 정보 접근 ] ================ userDtails ===============");
+        System.out.println("userDtails[username] : " + userDtails.getUsername());
+        System.out.println("userDtails[toString] : " + userDtails.toString());
+        return "세션 정보 확인하기";
+    }
+
+    @GetMapping("/test/oauth/login")
+    public @ResponseBody String testOAuthLogin(Authentication authentication,
+                        @AuthenticationPrincipal OAuth2User oauth) {
+
+        System.out.println("[ OAuth - 세션 정보 접근 ] =============== authentication.getPrincipal() ================");
+        OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+        System.out.println("authentication : " + oauth2User.getAttributes());
+
+        System.out.println("[ OAuth - 세션 정보 접근 ] ================ userDtails ===============");
+        System.out.println("userDtails[username] : " + oauth.getAttributes());
+        return "OAuth 세션 정보 확인하기";
+    }
+
+
 
     /** =====================================================
      * [TEST]

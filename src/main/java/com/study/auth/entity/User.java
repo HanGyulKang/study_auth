@@ -24,8 +24,9 @@ public class User {
 //    @Enumerated(EnumType.STRING)
 //    private UserRole role;
     private String role;
-    @Enumerated(EnumType.STRING)
-    private UserSocialType socialType;
     @CreationTimestamp
     private Timestamp createDate;
+    @Enumerated(EnumType.STRING)
+    private UserSocialType socialType;
+    private String UserSocialId;
 }
