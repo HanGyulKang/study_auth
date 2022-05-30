@@ -75,7 +75,12 @@ public class IndexController {
     /** =====================================================
      * [TEST]
      ===================================================== */
-    @GetMapping({"","/index"})
+    @GetMapping("/")
+    public String none() {
+        return "index";
+    }
+
+    @GetMapping("/index")
     public String index() {
         return "index";
     }
