@@ -5,6 +5,7 @@ import com.study.auth.config.auth.PrincipalDetails;
 import com.study.auth.config.oauth.provider.OAuth2UserInfo;
 import com.study.auth.config.oauth.provider.impl.FacebookUserInfoImpl;
 import com.study.auth.config.oauth.provider.impl.GoogleUserInfoImpl;
+import com.study.auth.config.oauth.provider.impl.NaverUserInfoImpl;
 import com.study.auth.entity.User;
 import com.study.auth.repository.UserRepository;
 import com.study.auth.setEnum.UserRole;
@@ -15,6 +16,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
@@ -61,8 +64,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } else if(userRequest.getClientRegistration().getRegistrationId().equals("google")) {
             System.out.println("페이스북 로그인 요청");
             oAuth2UserInfo = new FacebookUserInfoImpl(oAuth2User.getAttributes());
+        } else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
+            System.out.println("네이버 로그인 요청");
+            oAuth2UserInfo = new NaverUserInfoImpl((Map<String, Object>) oAuth2User.getAttributes().get("response"));
         } else {
-            System.out.println("구글 또는 페이스북 로그인만 가능");
+            System.out.println("구글, 페이스북 또는 네이버 로그인만 가능");
         }
 
         // 분기해서 가져온 값 셋팅
@@ -77,7 +83,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         // 이미 가입한 회원인지 검증
         User userEntity = userRepository.findByUsername(username);
         if(userEntity == null) {
-            System.out.println("최초 구글 로그인");
+            System.out.println("최초 소셜 로그인");
             userEntity = User.builder()
                     .username(username)
                     .password(password)
